@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  AlexaSkillID:
+   Type: String
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      a: alteryx-alexa-s3-nvirginia
+    us-west-2:
+      a: alteryx-alexa-s3-oregon
+    eu-west-1:
+      a: alteryx-alexa-s3-ireland
+
+Resources:
+
+  createrole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {"Version": "2012-10-17","Statement": [{"Effect": "Allow","Principal": {"Service": "lambda.amazonaws.com"},"Action": "sts:AssumeRole"}]}
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      RoleName: alteryx-alexa-role
+
+  createlayer:
+    Type: 'AWS::Lambda::LayerVersion'
+    Properties:
+      CompatibleRuntimes:
+        - python3.8
+      Content:
+        S3Bucket: !FindInMap [RegionMap, !Ref "AWS::Region", a]
+        S3Key: alteryx-alexa-libraries.zip
+      LayerName: alteryx-alexa-libraries
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 92cb23f4-2906-408b-839e-c1d51bbe4034
+
+  createfunction:
+    DependsOn:
+      - createlayer
+      - createrole
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        S3Bucket: !FindInMap [RegionMap, !Ref "AWS::Region", a]
+        S3Key: alteryx-alexa-deployment-package.zip
+      FunctionName: alteryx-alexa-commands
+      Handler: lambda_function.lambda_handler
+      Layers:
+        - !Ref createlayer
+      Runtime: python3.8
+      Timeout: 30
+      Role:
+        Fn::GetAtt:
+          - createrole
+          - Arn
+
+  createtrigger:
+    DependsOn: createfunction
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !GetAtt createfunction.Arn
+      Principal: alexa-appkit.amazon.com
+      EventSourceToken:
+        Ref: AlexaSkillID

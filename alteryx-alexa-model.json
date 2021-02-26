@@ -1,0 +1,128 @@
+﻿{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "alteryx commands",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "runworkflowintent",
+                    "slots": [
+                        {
+                            "name": "workflowname",
+                            "type": "workflow",
+                            "samples": [
+                                "{workflowname}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "transform my data",
+                        "run my workflow",
+                        "run workflow"
+                    ]
+                },
+                {
+                    "name": "listworkflowsintent",
+                    "slots": [],
+                    "samples": [
+                        "what workflows are available to run",
+                        "get workflows",
+                        "list apps",
+                        "list workflows"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "workflow",
+                    "values": [
+                        {
+                            "id": "datasourceid1",
+                            "name": {
+                                "value": "datasourcename1"
+                            }
+                        },
+                        {
+                            "id": "datasourceid2",
+                            "name": {
+                                "value": "datasourcename2"
+                            }
+                        },
+                        {
+                            "id": "datasourceid3",
+                            "name": {
+                                "value": "datasourcename3"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "runworkflowintent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "workflowname",
+                            "type": "workflow",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.539671069903.106193109670"
+                            },
+                            "validations": [
+                                {
+                                    "type": "hasEntityResolutionMatch",
+                                    "prompt": "Slot.Validation.539671069903.106193109670.697398494880"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.539671069903.106193109670",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "let's transform your data, what process do you want to run?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "Okay, what workflow do you want to run?"
+                    }
+                ]
+            },
+            {
+                "id": "Slot.Validation.539671069903.106193109670.697398494880",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "This workflow cannot be found, you can say list workflows to view available workflows or say cancel to exit the skill"
+                    }
+                ]
+            }
+        ]
+    }
+}
