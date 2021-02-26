@@ -52,21 +52,21 @@
                     "name": "workflow",
                     "values": [
                         {
-                            "id": "datasourceid1",
+                            "id": "workflowid1",
                             "name": {
-                                "value": "datasourcename1"
+                                "value": "workflowname1"
                             }
                         },
                         {
-                            "id": "datasourceid2",
+                            "id": "workflowid2",
                             "name": {
-                                "value": "datasourcename2"
+                                "value": "workflowname2"
                             }
                         },
                         {
-                            "id": "datasourceid3",
+                            "id": "workflowid3",
                             "name": {
-                                "value": "datasourcename3"
+                                "value": "workflowname3"
                             }
                         }
                     ]
